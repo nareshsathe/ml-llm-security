@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Dark theme (default) */
+:root,
+[data-theme="dark"] {
+  --color-base: 9 11 16;
+  --color-panel: 17 21 30;
+  --color-panel-2: 23 28 39;
+  --color-border: 30 36 48;
+  --color-text: 226 232 240;
+  --color-text-muted: 148 163 184;
+  --color-accent: 59 130 246;
+  --color-danger: 239 68 68;
+  --color-warn: 245 158 11;
+  --color-safe: 34 197 94;
+}
+
+/* Light theme */
+[data-theme="light"] {
+  --color-base: 247 248 250;
+  --color-panel: 255 255 255;
+  --color-panel-2: 243 245 248;
+  --color-border: 226 230 237;
+  --color-text: 15 23 42;
+  --color-text-muted: 100 111 130;
+  --color-accent: 37 99 235;
+  --color-danger: 220 38 38;
+  --color-warn: 180 95 6;
+  --color-safe: 21 128 61;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar — global */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb { background: rgb(var(--color-border)); border-radius: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* Sidebar scrollbar — even thinner */
+.sidebar-scroll::-webkit-scrollbar { width: 4px; }
+.sidebar-scroll::-webkit-scrollbar-thumb { background: rgb(var(--color-border) / 0.6); border-radius: 4px; }
+
+/* Smooth theme transition */
+body, .theme-transition {
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+/* ── Typing indicator animation ──────────────────────────────────────── */
+@keyframes typing-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
+  30%            { transform: translateY(-4px); opacity: 1; }
+}
+
+.typing-dot {
+  display: inline-block;
+  animation: typing-bounce 1.3s ease-in-out infinite;
+}
+.typing-dot:nth-child(1) { animation-delay: 0s; }
+.typing-dot:nth-child(2) { animation-delay: 0.18s; }
+.typing-dot:nth-child(3) { animation-delay: 0.36s; }
+
+/* ── Message fade-in animation ───────────────────────────────────────── */
+@keyframes msg-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.msg-animate {
+  animation: msg-in 0.22s ease-out both;
+}
+
+/* ── Textarea auto-resize helper ─────────────────────────────────────── */
+textarea {
+  field-sizing: content;  /* progressive enhancement — ignored where unsupported */
+}

@@ -1,0 +1,146 @@
+================================================================================
+ ML-BASED LLM SECURITY SYSTEM — REQUIREMENTS.txt
+ Everything needed to run this project, in one file.
+================================================================================
+
+--------------------------------------------------------------------------------
+OPTION A — RECOMMENDED: DOCKER (only 1 real requirement)
+--------------------------------------------------------------------------------
+If you use Docker, you do NOT need to install Python, Node.js, or MongoDB
+yourself — they all run inside containers automatically.
+
+Required:
+  - Docker Desktop 24.0+  (includes Docker Compose v2)
+    Download: https://www.docker.com/products/docker-desktop/
+
+Then run one command from the project root:
+  docker compose up --build
+
+That's the entire requirement list for Option A. Everything below this line
+is ONLY needed if you choose Option B (running each service manually without
+Docker, for local development).
+
+--------------------------------------------------------------------------------
+OPTION B — MANUAL / NO DOCKER (for local development)
+--------------------------------------------------------------------------------
+
+### 1. System-level requirements
+
+  - Python        3.11 or higher   (https://www.python.org/downloads/)
+  - Node.js       20.x LTS or higher   (https://nodejs.org/)
+  - npm           10.x or higher   (ships with Node.js)
+  - MongoDB       7.x   (https://www.mongodb.com/try/download/community)
+                  OR a free MongoDB Atlas cloud cluster (no local install)
+  - pip           latest   (ships with Python)
+  - git           (optional, only needed if pushing to a repository)
+
+  Verify each with:
+    python3 --version
+    node --version
+    npm --version
+    mongod --version
+
+### 2. Python packages (ML Service — ml-service/)
+
+  Install with:
+    cd ml-service
+    pip install -r requirements.txt
+
+  Exact packages (also listed in ml-service/requirements.txt):
+    fastapi==0.115.0
+    uvicorn[standard]==0.30.6
+    pydantic==2.9.2
+    scikit-learn==1.5.2
+    joblib==1.4.2
+    pandas==2.2.3
+    numpy==1.26.4
+    nltk==3.9.1
+    spacy==3.7.5
+    python-multipart==0.0.9
+
+  Additional one-time downloads required by the above packages:
+    python -m nltk.downloader stopwords wordnet punkt punkt_tab omw-1.4
+    python -m spacy download en_core_web_sm
+
+### 3. Node.js packages — Backend (backend/)
+
+  Install with:
+    cd backend
+    npm install
+
+  Exact packages (also listed in backend/package.json):
+    express@^4.21.0
+    express-rate-limit@^7.4.0
+    mongoose@^8.7.0
+    jsonwebtoken@^9.0.2
+    bcryptjs@^2.4.3
+    axios@^1.7.7
+    cors@^2.8.5
+    dotenv@^16.4.5
+    morgan@^1.10.0
+    nodemon@^3.1.7   (dev dependency, for auto-reload)
+
+### 4. Node.js packages — Frontend (frontend/)
+
+  Install with:
+    cd frontend
+    npm install
+
+  Exact packages (also listed in frontend/package.json):
+    react@^18.3.1
+    react-dom@^18.3.1
+    react-router-dom@^6.26.2
+    recharts@^2.12.7
+    axios@^1.7.7
+    vite@^5.4.8            (dev dependency)
+    @vitejs/plugin-react@^4.3.1   (dev dependency)
+    tailwindcss@^3.4.13    (dev dependency)
+    postcss@^8.4.47        (dev dependency)
+    autoprefixer@^10.4.20  (dev dependency)
+
+--------------------------------------------------------------------------------
+### 5. Environment variables required (all services)
+
+  File: backend/.env   (copy from backend/.env.example if missing)
+  --------------------------------------------------------------
+  PORT=5000
+  MONGO_URI=mongodb://localhost:27017/llm_security      <- change if using Atlas
+  ML_SERVICE_URL=http://localhost:8000
+  JWT_SECRET=<any long random string>
+  GROQ_API_KEY=<your Groq API key from https://console.groq.com>
+  GROQ_MODEL=llama-3.3-70b-versatile
+  GROQ_BASE_URL=https://api.groq.com/openai/v1
+  RATE_LIMIT_MAX=10
+
+  File: frontend/.env   (copy from frontend/.env.example if missing)
+  --------------------------------------------------------------
+  VITE_BACKEND_URL=http://localhost:5000
+
+--------------------------------------------------------------------------------
+### 6. Accounts needed (only if NOT using local Docker defaults)
+
+  - Groq account + API key   — REQUIRED (free tier available)
+                                 https://console.groq.com
+  - MongoDB Atlas account    — OPTIONAL, only if not running Mongo locally/Docker
+                                 https://www.mongodb.com/cloud/atlas/register
+  - Docker Hub account       — NOT required to run, only if you plan to push
+                                 your own images publicly
+
+--------------------------------------------------------------------------------
+### 7. Minimum hardware
+
+  - RAM:   4 GB minimum, 8 GB recommended (Docker + Node + Python + Mongo together)
+  - Disk:  ~2 GB free (Docker images + node_modules + Python packages)
+  - CPU:   Any modern dual-core+; no GPU required (all ML models are CPU-only)
+
+--------------------------------------------------------------------------------
+### 8. Ports used (make sure these are free on your machine)
+
+  5173  -> Frontend (React)
+  5000  -> Backend (Node/Express API)
+  8000  -> ML Service (FastAPI)
+  27017 -> MongoDB
+
+================================================================================
+ For exact step-by-step run commands, see SETUP.md in the project root.
+================================================================================

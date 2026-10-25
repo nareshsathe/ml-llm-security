@@ -1,0 +1,12 @@
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
+.env
+!.env.example
+*.log
+.DS_Store
+
+# Keep trained model artifacts (shipped pretrained) but ignore future retrains' temp files
+ml-service/app/models/*.tmp

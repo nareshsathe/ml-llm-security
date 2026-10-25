@@ -1,0 +1,15 @@
+{
+  "stage": "2 (attack-type classification, malicious prompts only)",
+  "label_source": "weak supervision (bootstrapped from keyword patterns), then ML-trained on top",
+  "classes": [
+    "Data Extraction",
+    "Jailbreak",
+    "Other",
+    "Prompt Injection",
+    "Role Manipulation"
+  ],
+  "accuracy": 0.9189,
+  "f1_macro": 0.7847,
+  "train_rows": 2368,
+  "test_rows": 592
+}

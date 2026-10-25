@@ -1,0 +1,63 @@
+services:
+  mongodb:
+    image: mongo:7
+    container_name: llm-security-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  ml-service:
+    build: ./ml-service
+    container_name: llm-security-ml
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    # ^ ml-service reads GROQ_API_KEY/GROQ_BASE_URL from the SAME .env as the
+    # backend, purely for audio transcription (POST /classify/audio) — image
+    # (OCR) and text classification need no key at all. If you never use the
+    # audio endpoint, you can skip filling in a Groq key entirely.
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 15s
+      timeout: 10s
+      retries: 8
+      start_period: 60s
+
+  backend:
+    build: ./backend
+    container_name: llm-security-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/llm_security
+      - ML_SERVICE_URL=http://ml-service:8000
+    ports:
+      - "5000:5000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      ml-service:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    container_name: llm-security-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:
